@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--Wizard For Sale Order-->
+        <record id="view_order_merge_form_new_1" model="ir.ui.view">
+            <field name="model">order.merge</field>
+            <field name="arch" type="xml">
+                <form string="Merge orders">
+                    <sheet>
+                        <span style="font-size:20px; color:black;">You can only merge draft orders.</span>
+                        <group>
+                            <field name="type"/>
+                            <field name="order" domain="[('id','in',order_to_merge[0][2])]" attrs="{'invisible': [('type', 'in', ['new','exist'])],'required': [('type', 'in', ['exist_1','exist_2'])]}"/>
+                            <field name="order_to_merge" readonly="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="merge" type="object" string="Merge" class="oe_highlight"
+                                attrs="{'invisible': [('order_to_merge', '=', [(6, False, [])])]}"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <!--Wizard For Purchase Order-->
+        <record id="view_purchase_order_merge_form_new_1" model="ir.ui.view">
+            <field name="model">purchase.order.merge</field>
+            <field name="arch" type="xml">
+                <form string="Merge orders">
+                    <sheet>
+                        <span style="font-size:20px; color:black;">You can only merge draft orders.</span>
+                        <group>
+                            <field name="type"/>
+                            <field name="purchase_order" domain="[('id','in',purchase_order_to_merge[0][2])]" attrs="{'invisible': [('type', 'in', ['new','exist'])],'required': [('type', 'in', ['exist_1','exist_2'])]}"/>
+                            <field name="purchase_order_to_merge" readonly="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="merge_purchase" type="object" string="Merge" class="oe_highlight"
+                                attrs="{'invisible': [('purchase_order_to_merge', '=', [(6, False, [])])]}"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
