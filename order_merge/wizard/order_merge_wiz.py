@@ -216,6 +216,7 @@ class PurchaseOrderMerge(models.TransientModel):
         copy_list = []
         vendor_ref = []
         myString = ''
+        source_docs = []
         
         if len(purchases) < 2:
             raise Warning ('Please select multiple orders to merge in the list view.')
@@ -236,7 +237,10 @@ class PurchaseOrderMerge(models.TransientModel):
             new_purchase = purchase_obj.create({'partner_id':partner_name,'partner_ref':myString})
             for pur in purchases:
                 partners_list.append(pur.partner_id)
-                
+                # get origin source docs and append to list
+                purchase = self.env['purchase.order'].search([('id', '=', pur.id)])
+                source_docs.append(str(purchase.origin))
+
                 if not partners_list[1:] == partners_list[:-1]:
                     raise Warning ('You can only merge orders of same partners.')
                     
@@ -258,6 +262,8 @@ class PurchaseOrderMerge(models.TransientModel):
                     
             for orders in cancel_list:
                     orders.button_cancel()
+            new_purchase.origin = '; '.join(map(str, source_docs))
+
         if self.type == 'exist':
             partner_name = purchases and purchases[0].partner_id.id
             new_purchase = purchase_obj.create({'partner_id':partner_name,'partner_ref':myString})
@@ -335,4 +341,4 @@ class PurchaseOrderMerge(models.TransientModel):
             'views': [(False, 'form')],
         }
         return result
-    
+
